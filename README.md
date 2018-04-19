@@ -26,14 +26,14 @@ in settings.php:
 
 # Advanced settings (still on todo.)
 
-  /**
-   * Compression level
-   * @see http://php.net/gzcompress
-   */
-  $settings['cache_compression_ratio'] = 1;
+    /**
+     * Compression level
+     * @see http://php.net/gzcompress
+     */
+    $settings['cache_compression_ratio'] = 1;
 
-  /**
-   * Minimum string length to add compression.
-   * Seems to be completely based on gut feeling. can not find any sources googling this topic.
-   */
-  $settings['cache_compression_size_threshold'] = 100;
+    /**
+     * Minimum string length to add compression.
+     * Seems to be completely based on gut feeling. can not find any sources googling this topic.
+     */
+    $settings['cache_compression_size_threshold'] = 100;
