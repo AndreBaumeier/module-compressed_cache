@@ -5,8 +5,9 @@ This package provides a cache backend which leverages gzip compression for the s
 Upon cache set the cache data will be gzipped, if the gzipped data is smaller than the original data the compressed data will be stored in the cache bin.
 
 This Database Backend adds two additional states to serialized column of Drupal cores DatabaseBackend.
-SERIALIZED_COMPRESSED (2): a serialized object, compressed.
-STRING_SERIALIZED_COMPRESSED (3): a compressed string.
+
+- SERIALIZED_COMPRESSED (2): a serialized object, compressed.
+- STRING_SERIALIZED_COMPRESSED (3): a compressed string.
 
 # Requirements
 
