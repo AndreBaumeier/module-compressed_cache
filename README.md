@@ -18,12 +18,12 @@ php functions: gzcompress, gzuncompress come with zlib extension.
 in settings.php:
 
     // Default cache bin
-    $settings['cache']['default'] = 'cache.backend.compressed_cache';
+    $settings['cache']['default'] = 'cache.backend.database_compressed_cache';
     // Specific cache bins
-    $settings['cache']['bins']['data'] = 'cache.backend.compressed_cache';
-    $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.compressed_cache';
-    $settings['cache']['bins']['render'] = 'cache.backend.compressed_cache';
-    $settings['cache']['bins']['page'] = 'cache.backend.compressed_cache';
+    $settings['cache']['bins']['data'] = 'cache.backend.database_compressed_cache';
+    $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.database_compressed_cache';
+    $settings['cache']['bins']['render'] = 'cache.backend.database_compressed_cache';
+    $settings['cache']['bins']['page'] = 'cache.backend.database_compressed_cache';
 
 # Advanced settings (still on todo.)
 
