@@ -55,7 +55,7 @@ class DatabaseCompressedBackend extends DatabaseBackend {
    *   (optional) The maximum number of rows that are allowed in this cache bin
    *   table.
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, $cache_compression_ratio = 1, $cache_compression_size_threshold = 100) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, $cache_compression_ratio = 6, $cache_compression_size_threshold = 100) {
     parent::__construct($connection,$checksum_provider,$bin,$max_rows);
 
     $this->cache_compression_ratio = $cache_compression_ratio;
@@ -174,7 +174,7 @@ class DatabaseCompressedBackend extends DatabaseBackend {
       if ($this->gzip_available && $data_length > $this->cache_compression_size_threshold) {
         $compressed_data = gzcompress($fields['data'], $this->cache_compression_ratio);
         // Check if compressed string is shorter than original.
-        if (strlen($compressed_data) < $data_length) {
+        if ($compressed_data && strlen($compressed_data) < $data_length) {
           $fields['data'] = $compressed_data;
           if ($fields['serialized'] == 1) {
             // Serialized object, set state accordingly.
