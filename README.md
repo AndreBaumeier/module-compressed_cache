@@ -29,6 +29,7 @@ in settings.php:
 
     /**
      * Compression level
+     * default = 6
      * @see http://php.net/gzcompress
      */
     $settings['cache_compression_ratio'] = 1;
