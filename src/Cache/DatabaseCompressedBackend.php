@@ -24,23 +24,26 @@ class DatabaseCompressedBackend extends DatabaseBackend {
 
   /**
    * True if gzip functions are available.
+   *
    * @var bool
    */
-  protected $gzip_available;
+  protected $gzipAvailable;
 
   /**
    * Redis module claims level 1 provides good enough results.
+   *
+   * @var int
    * @see https://cgit.drupalcode.org/redis/tree/lib/Redis/CacheCompressed.php?h=7.x-3.x#n24
    * @see https://www.drupal.org/project/redis/issues/2826332#comment-11794927
-   * @var
    */
-  protected $cache_compression_ratio;
+  protected $cacheCompressionRatio;
 
   /**
    * Seems to be completely based on gut feeling. can not find any sources googling this topic.
-   * @var
+   *
+   * @var int
    */
-  protected $cache_compression_size_threshold;
+  protected $cacheCompressionSizeThreshold;
 
   /**
    * Constructs a DatabaseBackend object.
@@ -56,13 +59,13 @@ class DatabaseCompressedBackend extends DatabaseBackend {
    *   table.
    */
   public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, $cache_compression_ratio = 6, $cache_compression_size_threshold = 100) {
-    parent::__construct($connection,$checksum_provider,$bin,$max_rows);
+    parent::__construct($connection, $checksum_provider, $bin, $max_rows);
 
-    $this->cache_compression_ratio = $cache_compression_ratio;
-    $this->cache_compression_size_threshold = $cache_compression_size_threshold;
+    $this->cacheCompressionRatio = $cache_compression_ratio;
+    $this->cacheCompressionSizeThreshold = $cache_compression_size_threshold;
 
     // Check if gzip compression is available.
-    $this->gzip_available = (function_exists('gzcompress') && function_exists('gzuncompress'));
+    $this->gzipAvailable = (function_exists('gzcompress') && function_exists('gzuncompress'));
   }
 
   /**
@@ -103,23 +106,27 @@ class DatabaseCompressedBackend extends DatabaseBackend {
     if ($cache->serialized) {
       switch ($cache->serialized) {
         case self::SERIALIZED_COMPRESSED:
-          // decompress
-          if ($this->gzip_available) {
+          // Decompress.
+          if ($this->gzipAvailable) {
             $cache->data = unserialize(gzuncompress($cache->data));
-          } else {
+          }
+          else {
             // No gzip available. unusable cache.
             return FALSE;
           }
           break;
+
         case self::STRING_COMPRESSED:
-          // decompress
-          if ($this->gzip_available) {
-          $cache->data = gzuncompress($cache->data);
-          } else {
+          // Decompress.
+          if ($this->gzipAvailable) {
+            $cache->data = gzuncompress($cache->data);
+          }
+          else {
             // No gzip available. unusable cache.
             return FALSE;
           }
           break;
+
         default:
           // Fallback, uncompressed serialized data (1)
           $cache->data = unserialize($cache->data);
@@ -169,17 +176,18 @@ class DatabaseCompressedBackend extends DatabaseBackend {
         $fields['serialized'] = 0;
       }
 
-      // Add compression
+      // Add compression.
       $data_length = strlen($fields['data']);
-      if ($this->gzip_available && $data_length > $this->cache_compression_size_threshold) {
-        $compressed_data = gzcompress($fields['data'], $this->cache_compression_ratio);
+      if ($this->gzipAvailable && $data_length > $this->cacheCompressionSizeThreshold) {
+        $compressed_data = gzcompress($fields['data'], $this->cacheCompressionRatio);
         // Check if compressed string is shorter than original.
         if ($compressed_data && strlen($compressed_data) < $data_length) {
           $fields['data'] = $compressed_data;
           if ($fields['serialized'] == 1) {
             // Serialized object, set state accordingly.
             $fields['serialized'] = self::SERIALIZED_COMPRESSED;
-          } else {
+          }
+          else {
             // Usual string.
             $fields['serialized'] = self::STRING_COMPRESSED;
           }

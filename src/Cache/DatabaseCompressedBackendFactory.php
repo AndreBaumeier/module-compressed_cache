@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\compressed_cache\Cache;
 
 use Drupal\Core\Cache\DatabaseBackendFactory;
