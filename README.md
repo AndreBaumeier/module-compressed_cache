@@ -28,17 +28,22 @@ in settings.php:
     $settings['cache']['bins']['render'] = 'cache.backend.database_compressed_cache';
     $settings['cache']['bins']['page'] = 'cache.backend.database_compressed_cache';
 
-# Advanced settings (still on todo.)
+# Advanced settings
 
     /**
      * Compression level
      * default = 6
      * @see http://php.net/gzcompress
      */
-    $settings['cache_compression_ratio'] = 1;
+    $settings['compressed_cache']['cache_compression_ratio'] = 1;
 
     /**
      * Minimum string length to add compression.
      * Seems to be completely based on gut feeling. can not find any sources googling this topic.
      */
-    $settings['cache_compression_size_threshold'] = 100;
+    $settings['compressed_cache']['cache_compression_size_threshold'] = 100;
+    
+    /**
+     * Whether garbage collection is enabled or not. Defaults to TRUE.
+     */
+    $settings['compressed_cache']['garbage_collection_enabled'] = TRUE;

@@ -46,6 +46,12 @@ class DatabaseCompressedBackend extends DatabaseBackend {
   protected $cacheCompressionSizeThreshold;
 
   /**
+   * Whether garbage collection is enabled or not.
+   * @var bool
+   */
+  protected $garbageCollectionEnabled = TRUE;
+
+  /**
    * Constructs a DatabaseBackend object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -57,12 +63,19 @@ class DatabaseCompressedBackend extends DatabaseBackend {
    * @param int $max_rows
    *   (optional) The maximum number of rows that are allowed in this cache bin
    *   table.
+   * @param int $cache_compression_ratio
+   *   (optional) cache commpression level
+   * @param int $cache_compression_size_threshold
+   *   (optional) Minimum string length to enable compression.
+   * @param bool $garbage_collection_enabled
+   *   (optional) Whether garbage collection is enabled or not.
    */
-  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, $cache_compression_ratio = 6, $cache_compression_size_threshold = 100) {
+  public function __construct(Connection $connection, CacheTagsChecksumInterface $checksum_provider, $bin, $max_rows = NULL, $cache_compression_ratio = 6, $cache_compression_size_threshold = 100, $garbage_collection_enabled = TRUE) {
     parent::__construct($connection, $checksum_provider, $bin, $max_rows);
 
     $this->cacheCompressionRatio = $cache_compression_ratio;
     $this->cacheCompressionSizeThreshold = $cache_compression_size_threshold;
+    $this->garbageCollectionEnabled = $garbage_collection_enabled;
 
     // Check if gzip compression is available.
     $this->gzipAvailable = (function_exists('gzcompress') && function_exists('gzuncompress'));
@@ -211,6 +224,18 @@ class DatabaseCompressedBackend extends DatabaseBackend {
     }
 
     $query->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function garbageCollection() {
+    if ($this->garbageCollectionEnabled) {
+      error_log('garbage collection enabled');
+      parent::garbageCollection();
+    } else {
+      error_log('garbage collection disabled');
+    }
   }
 
 }

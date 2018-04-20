@@ -18,10 +18,15 @@ class DatabaseCompressedBackendFactory extends DatabaseBackendFactory {
   public function get($bin) {
     $max_rows = $this->getMaxRowsForBin($bin);
 
-    $cache_compression_ratio = 6;
-    $cache_compression_size_threshold = 100;
+    $_settings = [
+      'cache_compression_ratio' => 6,
+      'cache_compression_size_threshold' => 100,
+      'garbage_collection_enabled' => TRUE,
+    ];
 
-    return new DatabaseCompressedBackend($this->connection, $this->checksumProvider, $bin, $max_rows, $cache_compression_ratio, $cache_compression_size_threshold);
+    $_settings = array_merge($_settings, $this->settings->get('compressed_cache', []));
+
+    return new DatabaseCompressedBackend($this->connection, $this->checksumProvider, $bin, $max_rows, $_settings['cache_compression_ratio'], $_settings['cache_compression_size_threshold'], $_settings['garbage_collection_enabled']);
   }
 
 }
