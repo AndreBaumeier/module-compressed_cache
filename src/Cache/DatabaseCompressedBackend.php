@@ -20,7 +20,7 @@ use Drupal\Core\Database\Connection;
 class DatabaseCompressedBackend extends DatabaseBackend {
 
   const SERIALIZED_COMPRESSED = 2;
-  const STRING_SERIALIZED_COMPRESSED = 3;
+  const STRING_COMPRESSED = 3;
 
   /**
    * True if gzip functions are available.
@@ -111,7 +111,7 @@ class DatabaseCompressedBackend extends DatabaseBackend {
             return FALSE;
           }
           break;
-        case self::STRING_SERIALIZED_COMPRESSED:
+        case self::STRING_COMPRESSED:
           // decompress
           if ($this->gzip_available) {
           $cache->data = gzuncompress($cache->data);
@@ -181,7 +181,7 @@ class DatabaseCompressedBackend extends DatabaseBackend {
             $fields['serialized'] = self::SERIALIZED_COMPRESSED;
           } else {
             // Usual string.
-            $fields['serialized'] = self::STRING_SERIALIZED_COMPRESSED;
+            $fields['serialized'] = self::STRING_COMPRESSED;
           }
         }
       }
