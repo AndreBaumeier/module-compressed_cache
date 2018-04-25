@@ -231,10 +231,7 @@ class DatabaseCompressedBackend extends DatabaseBackend {
    */
   public function garbageCollection() {
     if ($this->garbageCollectionEnabled) {
-      error_log('garbage collection enabled');
       parent::garbageCollection();
-    } else {
-      error_log('garbage collection disabled');
     }
   }
 
